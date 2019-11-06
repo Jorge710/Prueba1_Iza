@@ -76,9 +76,9 @@ public class activity_diarias extends AppCompatActivity {
     public void agregar(View v) {
         if(et1.getText().toString().equals("")){
 
-            System.out.println("Ingrese el nombre y número de télefono!");
+            System.out.println("Ingrese una ctividad!");
             String titulo = "No se puede guardar";
-            String mensajeAlerta= "Debe ingresar un nombre y número de teléfono para guardar.";
+            String mensajeAlerta= "Debe ingresar una actividad.";
             alerta(titulo,mensajeAlerta);
         }else {
             actividadesRealizar.add(et1.getText().toString());
@@ -87,48 +87,40 @@ public class activity_diarias extends AppCompatActivity {
             Toast.makeText(this, "Realizando",
                     Toast.LENGTH_SHORT).show();
 
+            String nomarchivo = "actividades.txt";
+            String contenido = String.valueOf(actividadesRealizar);
+            System.out.println("contenido del array: "+contenido);
+            try {
+                File tarjeta = Environment.getExternalStorageDirectory();
+                Toast.makeText(this,tarjeta.getAbsolutePath(),Toast.LENGTH_LONG).show();
+                File file = new File(tarjeta.getAbsolutePath(), nomarchivo);
+                OutputStreamWriter osw = new OutputStreamWriter(
+                        new FileOutputStream(file));
+                osw.write(contenido);
+                osw.flush();
+                osw.close();
+                Toast.makeText(this, "Realizado se guardo en la memoria del telefono =)",
+                        Toast.LENGTH_SHORT).show();
+                //et1.setText("");
+                //et2.setText("");
+            } catch (IOException ioe) {
+                Toast.makeText(this, "No se pudo grabar",
+                        Toast.LENGTH_SHORT).show();
+            }
+
         }
-        Toast.makeText(this, "Realizado =)",
-                Toast.LENGTH_LONG).show();
+
     }
 
-    /**
-     * Mensaje en pantalla que desaparece tras pulsar Atras
-     //* @param String cadena
-     */
     public void alerta(String titulo, String cadena) {
-        //se prepara la alerta creando nueva instancia
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        //seleccionamos la cadena a mostrar
         dialogBuilder.setMessage(cadena);
-        //elegimo un titulo y configuramos para que se pueda quitar
         dialogBuilder.setCancelable(true).setTitle(titulo);
-        //mostramos el dialogBuilder
         dialogBuilder.create().show();
     }
-    public void grabar(View v) {
-        String nomarchivo = et1.getText().toString();
-        String contenido = et2.getText().toString();
-        try {
-            File tarjeta = Environment.getExternalStorageDirectory();
-            Toast.makeText(this,tarjeta.getAbsolutePath(),Toast.LENGTH_LONG).show();
-            File file = new File(tarjeta.getAbsolutePath(), nomarchivo);
-            OutputStreamWriter osw = new OutputStreamWriter(
-                    new FileOutputStream(file));
-            osw.write(contenido);
-            osw.flush();
-            osw.close();
-            Toast.makeText(this, "Realizando",
-                    Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "Realizado =)",
-                    Toast.LENGTH_SHORT).show();
-            et1.setText("");
-            et2.setText("");
-        } catch (IOException ioe) {
-            Toast.makeText(this, "No se pudo grabar",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
+
+
+
 
     public void recuperar(View v) {
         String nomarchivo = et1.getText().toString();
